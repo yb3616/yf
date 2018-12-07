@@ -38,7 +38,7 @@ class DB
   /**
    * 连接得数据库
    */
-  private $_db= 'master';
+  private $_db= '';
 
   /**
    * 参数
@@ -69,12 +69,14 @@ class DB
    * 设置表名，不带前缀
    *
    * @param   $name   string    数据库表名
+   * @param   $db     string    数据库配置，默认：master
    *
    * @return  object
    */
-  static public function table( string $name )
+  static public function table( string $name, string $db='master' )
   {
     $self = new self();
+    $self->db( $db );
     $self->_params['table'] = self::_table( $name );
     return $self;
   }
@@ -82,13 +84,15 @@ class DB
   /**
    * 设置表名，带前缀
    *
-   * @param   $name     string    数据库表名
+   * @param   $name   string    数据库表名
+   * @param   $db     string    数据库配置，默认：master
    *
    * @return  $this
    */
-  static public function name( string $name )
+  static public function name( string $name, string $db='master' )
   {
     $self = new self();
+    $self->db( $db );
     $self->_params['table'] = self::_table( self::$_config[$self->_db]['pre'] . $name );
     return $self;
   }
@@ -616,10 +620,11 @@ class DB
    *
    * @param   $db     string    数据库配置
    */
-  public function db( string $db ){
+  private function db( string $db ){
     if( empty( $this->_db ) ){
       $this->_db = $db;
     }
+    return $this;
   }
 
   /**
